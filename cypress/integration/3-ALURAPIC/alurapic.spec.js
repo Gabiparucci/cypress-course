@@ -40,4 +40,23 @@ describe("Login e registro de usuários", () => {
     cy.contains("button", "Register").click();
     cy.contains("ap-vmessage", "Mininum length is 2").should("be.visible");
   });
+
+  it("verifica username está minúsculo", () => {
+    cy.contains("a", "Register now").click();
+    cy.get('input[formcontrolname="userName"]').type("GABI");
+    cy.contains("button", "Register").click();
+    cy.contains("ap-vmessage", "Must be lower case").should("be.visible");
+  });
+
+  it.only("fazer login de usuário inválido", () => {
+    cy.login("jacqueline", "1234");
+    cy.on("window:alert", (str) => {
+      expect(str).to.equal("Invalid user name or password");
+    });
+  });
+
+  it.only("fazer login de usuário válido", () => {
+    cy.login("flavio", "123");
+    cy.contains("a", "(Logout)").should("be.visible");
+  });
 });
